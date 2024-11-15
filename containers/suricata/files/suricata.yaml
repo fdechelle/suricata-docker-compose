@@ -62,7 +62,8 @@ default-log-dir: /var/log/suricata/
 
 # Global stats configuration
 stats:
-  enabled: yes
+#  enabled: yes
+  enabled: no
   # The interval field (in seconds) controls the interval at
   # which stats are updated in the log.
   interval: 8
@@ -90,8 +91,9 @@ outputs:
   # Extensible Event Format (nicknamed EVE) event log in JSON format
   - eve-log:
       enabled: yes
-      filetype: regular #regular|syslog|unix_dgram|unix_stream|redis
-      filename: eve.json
+#      filetype: regular #regular|syslog|unix_dgram|unix_stream|redis
+      filetype: syslog #regular|syslog|unix_dgram|unix_stream|redis
+#      filename: eve.json
       # Enable for multi-threaded eve.json output; output files are amended with
       # an identifier, e.g., eve.9.json
       #threaded: false
@@ -760,7 +762,7 @@ dpdk:
       # - auto takes all cores
       # in IPS mode it is required to specify the number of cores and the numbers on both interfaces must match
       threads: auto
-      # interrupt-mode: false # true to switch to interrupt mode 
+      # interrupt-mode: false # true to switch to interrupt mode
       promisc: true # promiscuous mode - capture all packets
       multicast: true # enables also detection on multicast packets
       checksum-checks: true # if Suricata should validate checksums
@@ -1269,8 +1271,8 @@ coredump:
 # This feature is currently only used by the reject* keywords.
 host-mode: auto
 
-# Number of packets preallocated per thread. The default is 1024. A higher number 
-# will make sure each CPU will be more easily kept busy, but may negatively 
+# Number of packets preallocated per thread. The default is 1024. A higher number
+# will make sure each CPU will be more easily kept busy, but may negatively
 # impact caching.
 #max-pending-packets: 1024
 
@@ -1307,7 +1309,7 @@ unix-command:
 
 # Magic file. The extension .mgc is added to the value here.
 #magic-file: /usr/share/file/magic
-#magic-file: 
+#magic-file:
 
 # GeoIP2 database file. Specify path and filename of GeoIP2 database
 # if using rules with "geoip" rule option.
