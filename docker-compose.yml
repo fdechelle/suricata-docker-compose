@@ -3,7 +3,10 @@ name: suricata
 services:
   suricate:
     container_name: "suricata"
-    image:  "jasonish/suricata:latest"
+    build:
+      context: "containers/suricata"
+      args:
+        BASE_IMAGE: "jasonish/suricata:latest"
     network_mode: "host"
     volumes:
         - type: "bind"
