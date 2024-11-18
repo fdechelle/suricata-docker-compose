@@ -316,6 +316,7 @@ outputs:
             enabled: no
             # passwords: yes           # enable output of passwords. Disabled by default
         - stats:
+            enabled: no
             totals: yes       # stats for all threads merged together
             threads: no       # per thread stats
             deltas: no        # include delta values
@@ -443,7 +444,8 @@ outputs:
 
   # Stats.log contains data from various counters of the Suricata engine.
   - stats:
-      enabled: yes
+#      enabled: yes
+      enabled: no
       filename: stats.log
       append: yes       # append to file (yes) or overwrite it (no)
       totals: yes       # stats for all threads merged together

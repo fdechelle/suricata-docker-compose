@@ -1,7 +1,7 @@
 name: suricata
 
 services:
-  suricate:
+  suricata:
     container_name: "suricata"
     build:
       context: "containers/suricata"
@@ -16,4 +16,29 @@ services:
       - NET_ADMIN
       - NET_RAW
       - SYS_NICE
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://127.0.0.1:601"
+    depends_on:
+      syslog:
+        condition: service_healthy
+        restart: true
     command: /docker-entrypoint.sh -i ${INTERFACE}
+
+  syslog:
+    container_name: "syslog"
+    image: "balabit/syslog-ng"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - LOG_TO_STDOUT= #optional
+#    volumes:
+#      - /path/to/syslog-ng/config:/config
+#      - /path/to/log:/var/log #optional
+    ports:
+      - 514:5514/udp
+      - 601:6601/tcp
+      - 6514:6514/tcp
+    restart: unless-stopped
