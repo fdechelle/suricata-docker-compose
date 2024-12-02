@@ -1,4 +1,4 @@
-ARG BASE_IMAGE
+ARG BASE_IMAGE=jasonish/suricata:latest
 
 FROM ${BASE_IMAGE}
 

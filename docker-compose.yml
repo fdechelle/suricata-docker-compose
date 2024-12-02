@@ -33,15 +33,8 @@ services:
 
   syslog:
     container_name: "syslog"
-    image: "balabit/syslog-ng"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
-      - LOG_TO_STDOUT= #optional
-#    volumes:
-#      - /path/to/syslog-ng/config:/config
-#      - /path/to/log:/var/log #optional
+    build:
+      context: "containers/syslog-ng"
     ports:
       - 514:5514/udp
       - 601:6601/tcp
