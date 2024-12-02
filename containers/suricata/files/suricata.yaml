@@ -100,7 +100,7 @@ outputs:
       #prefix: "@cee: " # prefix to prepend to each log entry
       # the following are valid when type: syslog above
       #identity: "suricata"
-      #facility: local5
+      facility: local5
       #level: Info ## possible levels: Emergency, Alert, Critical,
                    ## Error, Warning, Notice, Info, Debug
       #ethernet: no  # log ethernet header in events when available

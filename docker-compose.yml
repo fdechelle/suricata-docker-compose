@@ -8,14 +8,19 @@ services:
       args:
         BASE_IMAGE: "jasonish/suricata:latest"
     network_mode: "host"
-    volumes:
-        - type: "bind"
-          source: "./mounts/suricata/logs"
-          target: "/var/log/suricata"
+#    volumes:
+#        - type: "bind"
+#          source: "./mounts/suricata/logs"
+#          target: "/var/log/suricata"
     cap_add:
       - NET_ADMIN
       - NET_RAW
       - SYS_NICE
+      - SYS_ADMIN
+      - CHOWN
+      - DAC_OVERRIDE
+      - NET_BIND_SERVICE
+      - FOWNER
     logging:
       driver: syslog
       options:
