@@ -1,13 +1,10 @@
-ARG BASE_IMAGE=jasonish/suricata:latest
+FROM ubuntu:noble
 
-FROM ${BASE_IMAGE}
-
-RUN yum --assumeyes install syslog-ng
-
-COPY --chmod=0755 ./files/docker-entrypoint.sh /
-
+# suricata install and configure
+RUN apt-get update -qq; apt-get install -y software-properties-common ; apt-get clean
+RUN add-apt-repository ppa:oisf/suricata-stable
+RUN apt-get update -qq ; apt-get install -y suricata ; apt-get clean
 COPY --chown=suricata:suricata ./files/suricata.yaml /etc/suricata
 
-COPY ./files/syslog-ng-opts /etc/sysconfig/syslog-ng
-
-COPY ./files/syslog-ng-suricata.conf /etc/syslog-ng/conf.d/
+COPY --chmod=0755 ./files/docker-entrypoint.sh /
+ENTRYPOINT [ "/docker-entrypoint.sh" ]

@@ -2,69 +2,63 @@
 
 set -e
 
-fix_perms() {
-    if [[ "${PGID}" ]]; then
-        groupmod -o -g "${PGID}" suricata
-    fi
+# is all this mess really needed? Can we just simply run as root?
 
-    if [[ "${PUID}" ]]; then
-        usermod -o -u "${PUID}" suricata
-    fi
+# fix_perms() {
+#     if [[ "${PGID}" ]]; then
+#         groupmod -o -g "${PGID}" suricata
+#     fi
 
-    chown -R suricata:suricata /etc/suricata
-    chown -R suricata:suricata /var/lib/suricata
-    chown -R suricata:suricata /var/log/suricata
-    chown -R suricata:suricata /var/run/suricata
-}
+#     if [[ "${PUID}" ]]; then
+#         usermod -o -u "${PUID}" suricata
+#     fi
 
-for src in /etc/suricata.dist/*; do
-    filename=$(basename ${src})
-    dst="/etc/suricata/${filename}"
-    if ! test -e "${dst}"; then
-        echo "Creating ${dst}."
-        cp -a "${src}" "${dst}"
-    fi
-done
+#     chown -R suricata:suricata /etc/suricata
+#     chown -R suricata:suricata /var/lib/suricata
+#     chown -R suricata:suricata /var/log/suricata
+#     chown -R suricata:suricata /var/run/suricata
+# }
 
-# If the first command does not look like argument, assume its a
-# command the user wants to run. Normally I wouldn't do this.
-if [ $# -gt 0 -a "${1:0:1}" != "-" ]; then
-    exec $@
-fi
+# # check if needed if installed from PPA
+# copy_dist_files() {
+#     for src in /etc/suricata.dist/*; do
+#         filename=$(basename ${src})
+#         dst="/etc/suricata/${filename}"
+#         if ! test -e "${dst}"; then
+#             echo "Creating ${dst}."
+#             cp -a "${src}" "${dst}"
+#         fi
+#     done
+# }
 
-run_as_user="yes"
+# run_as_user="yes"
 
-check_for_cap() {
-    echo -n "Checking for capability $1: "
-    if getpcaps 1 2>&1 | grep -q "$1"; then
-        echo "yes"
-        return 0
-    else
-        echo "no"
-        return 1
-    fi
-}
+# check_for_cap() {
+#     echo -n "Checking for capability $1: "
+#     if getpcaps 1 2>&1 | grep -q "$1"; then
+#         echo "yes"
+#         return 0
+#     else
+#         echo "no"
+#         echo "Warning: no $1 capability, use --cap-add $1" > /dev/stderr
+#         return 1
+#     fi
+# }
 
-if ! check_for_cap sys_nice; then
-    echo "Warning: no sys_nice capability, use --cap-add sys_nice"
-    run_as_user="no"
-fi
-if ! check_for_cap net_admin; then
-    echo "Warning: no net_admin capability, use --cap-add net_admin"
-    run_as_user="no"
-fi
+# if ! check_for_cap sys_nice; then
+#     run_as_user="no"
+# fi
+# if ! check_for_cap net_admin; then
+#     run_as_user="no"
+# fi
 
-ARGS=""
+# ARGS=""
 
-if [[ "${run_as_user}" != "yes" ]]; then
-    echo "Warning: running as root due to missing capabilities" > /dev/stderr
-else
-    fix_perms
-    ARGS="${ARGS} --user suricata --group suricata"
-fi
+# if [[ "${run_as_user}" != "yes" ]]; then
+#     echo "Warning: running as root due to missing capabilities" > /dev/stderr
+# else
+#     fix_perms
+#     ARGS="${ARGS} --user suricata --group suricata"
+# fi
 
-# start syslog-ng
-. /etc/sysconfig/syslog-ng
-/usr/sbin/syslog-ng $SYSLOGNG_OPTS -p /var/run/syslogd.pid
-
-exec /usr/bin/suricata ${ARGS} ${SURICATA_OPTIONS} $@
+exec /usr/bin/suricata ${ARGS} $@

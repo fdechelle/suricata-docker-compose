@@ -92,15 +92,16 @@ outputs:
   - eve-log:
       enabled: yes
 #      filetype: regular #regular|syslog|unix_dgram|unix_stream|redis
-      filetype: syslog #regular|syslog|unix_dgram|unix_stream|redis
+      filetype: unix_stream #regular|syslog|unix_dgram|unix_stream|redis
 #      filename: eve.json
+      filename: /var/tmp/suricata.sock
       # Enable for multi-threaded eve.json output; output files are amended with
       # an identifier, e.g., eve.9.json
       #threaded: false
       #prefix: "@cee: " # prefix to prepend to each log entry
       # the following are valid when type: syslog above
       #identity: "suricata"
-      facility: local5
+      #facility: local5
       #level: Info ## possible levels: Emergency, Alert, Critical,
                    ## Error, Warning, Notice, Info, Debug
       #ethernet: no  # log ethernet header in events when available
