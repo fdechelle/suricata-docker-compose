@@ -4,6 +4,13 @@ services:
   suricata:
     container_name: "suricata"
     build:
-      context: "containers/suricata"
+      context: "containers/"
+      target: suricata
     network_mode: "host"
     command: /docker-entrypoint.sh -i ${INTERFACE}
+
+  testserver:
+    container_name: "testserver"
+    build:
+      context: "containers/"
+      target: testserver
