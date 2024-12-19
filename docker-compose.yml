@@ -6,8 +6,4 @@ services:
     build:
       context: "containers/suricata"
     network_mode: "host"
-#    volumes:
-#        - type: "bind"
-#          source: "./mounts/suricata/logs"
-#          target: "/var/log/suricata"
     command: /docker-entrypoint.sh -i ${INTERFACE}
