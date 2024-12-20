@@ -1,3 +1,4 @@
 .env
 containers/suricata/files/org/*
 containers/syslog-ng/files/org/*
+LOGS/

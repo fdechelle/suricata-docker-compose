@@ -28,8 +28,9 @@ FROM base AS suricata
 RUN apt-get update -qq; apt-get install -y software-properties-common ; apt-get clean
 RUN add-apt-repository ppa:oisf/suricata-stable
 RUN apt-get update -qq ; apt-get install -y suricata ; apt-get clean
-COPY --chown=suricata:suricata ./suricata/files/suricata.yaml /etc/suricata
 RUN suricata-update
+
+COPY --chown=suricata:suricata ./suricata/files/suricata.yaml /etc/suricata
 
 COPY ./suricata/files/suricata-idmefv2.conf /etc/suricata-idmefv2.conf
 
