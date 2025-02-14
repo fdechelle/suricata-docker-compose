@@ -24,6 +24,8 @@ RUN pip install --break-system-packages .
 
 FROM base AS suricata
 
+ARG CONNECTOR_CONFIG_FILE=./suricata/files/suricata-idmefv2.conf
+
 # suricata install and configure
 RUN apt-get update -qq; apt-get install -y software-properties-common ; apt-get clean
 RUN add-apt-repository ppa:oisf/suricata-stable
