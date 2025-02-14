@@ -34,7 +34,7 @@ RUN suricata-update
 
 COPY --chown=suricata:suricata ./suricata/files/suricata.yaml /etc/suricata
 
-COPY ./suricata/files/suricata-idmefv2.conf /etc/suricata-idmefv2.conf
+COPY ${CONNECTOR_CONFIG_FILE} /etc/suricata-idmefv2.conf
 
 COPY --chmod=0755 ./suricata/files/docker-entrypoint.sh /
 CMD [ "/docker-entrypoint.sh" ]
