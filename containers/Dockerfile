@@ -4,24 +4,16 @@ FROM ubuntu:noble AS base
 RUN apt-get update -qq; apt-get install -y git python3 python3-pip ; apt-get clean
 
 # install IDMEFv2 python library
-RUN git clone https://github.com/fdechelle/python-idmefv2.git
-# change the git url in order to allow anonymous clone
-WORKDIR /python-idmefv2
-RUN git submodule set-url idmefv2/schemas/drafts https://github.com/IDMEFv2/IDMEFv2-Drafts.git
-WORKDIR /python-idmefv2/idmefv2/schemas/drafts
-RUN git submodule init ; git submodule update
-WORKDIR /python-idmefv2
-RUN pip install --break-system-packages .
+RUN pip install --break-system-packages --extra-index-url https://test.pypi.org/simple/ idmefv2
 
 # install IDMEFv2 connectors
 WORKDIR /
-RUN git clone https://github.com/IDMEFv2/idmefv2-connectors.git
+ARG IDMEFV2_CONNECTORS_GIT=./files/base/idmefv2-connectors
+COPY ${IDMEFV2_CONNECTORS_GIT} /idmefv2-connectors/
 WORKDIR /idmefv2-connectors
 RUN pip install --break-system-packages .
 
 FROM base AS suricata
-
-ARG CONNECTOR_CONFIG_FILE=./suricata/files/suricata-idmefv2.conf
 
 # suricata install and configure
 RUN apt-get update -qq; apt-get install -y software-properties-common ; apt-get clean
@@ -32,11 +24,12 @@ RUN suricata-update
 # extra utils
 RUN apt-get update -qq; apt-get install -y curl ; apt-get clean
 
-COPY --chown=suricata:suricata ./suricata/files/suricata.yaml /etc/suricata
+COPY --chown=suricata:suricata ./files/suricata/suricata.yaml /etc/suricata
 
+ARG CONNECTOR_CONFIG_FILE=./files/suricata/suricata-idmefv2.conf
 COPY ${CONNECTOR_CONFIG_FILE} /etc/suricata-idmefv2.conf
 
-COPY --chmod=0755 ./suricata/files/docker-entrypoint.sh /
+COPY --chmod=0755 ./files/suricata/docker-entrypoint.sh /
 CMD [ "/docker-entrypoint.sh" ]
 
 FROM base AS testserver
